@@ -6,10 +6,6 @@ from django.db import migrations
 def migrate_owners(apps, schema_editor):
     Owner = apps.get_model('property', 'Owner')
     Flat = apps.get_model('property', 'Flat')
-    # FlatOwner = Flat.owners.through  # промежуточная модель
-
-    # owners_cache = {}
-    # links_to_create = []
 
     for flat in Flat.objects.all().only('id', 'owner', 'owners_phonenumber',
                                         'owner_pure_phone').iterator(chunk_size=1000):
@@ -17,18 +13,6 @@ def migrate_owners(apps, schema_editor):
                                                      phonenumber=flat.owners_phonenumber,
                                                      pure_phone=flat.owner_pure_phone)
         owner.flats.add(flat)
-
-    #     links_to_create.append(FlatOwner(owner=owner, flat=flat))
-    #     if len(links_to_create) >= batch_size:
-    #         FlatOwner.objects.bulk_create(
-    #             links_to_create, ignore_conflicts=True)
-    #         links_to_create = []
-    # if links_to_create:
-    #     FlatOwner.objects.bulk_create(links_to_create, ignore_conflicts=True)
-
-    # print(f'Создано {created_count} владельцев,'
-    #       f' обновлено {existing_count} владельцев,'
-    #       f' добавлено связей {FlatOwner.objects.count()} на {total_flats} квартир')
 
 
 class Migration(migrations.Migration):

@@ -56,6 +56,10 @@ class Flat(models.Model):
         'Когда создано объявление',
         default=timezone.now,
         db_index=True)
+    
+    class Meta:
+        verbose_name = 'Квартира'
+        verbose_name_plural = 'Квартиры'
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
@@ -68,19 +72,27 @@ class Complaint(models.Model):
                              verbose_name='Квартира, на которую пожаловались')
     text = models.TextField('Текст жалобы')
 
+    class Meta:
+        verbose_name = 'Жалоба'
+        verbose_name_plural = 'Жалобы'
+
 
 class Owner(models.Model):
-    full_name = models.CharField('ФИО владельца', max_length=200)
+    full_name = models.CharField('ФИО владельца', max_length=200, db_index=True)
 
     phonenumber = models.CharField('Номер владельца', max_length=20)
     pure_phone = PhoneNumberField('Нормализованный номер владельца',
-                                  max_length=20, blank=True)
+                                  max_length=20, blank=True, db_index=True)
     flats = models.ManyToManyField(
         Flat,
         blank=True,
         related_name='owners',
         verbose_name='Квартиры в собственности'
     )
+
+    class Meta:
+        verbose_name = 'Владелец'
+        verbose_name_plural = 'Владельцы'
 
     def __str__(self):
         return f'{self.full_name}'
