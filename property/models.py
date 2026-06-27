@@ -56,7 +56,7 @@ class Flat(models.Model):
         'Когда создано объявление',
         default=timezone.now,
         db_index=True)
-    
+
     class Meta:
         verbose_name = 'Квартира'
         verbose_name_plural = 'Квартиры'
