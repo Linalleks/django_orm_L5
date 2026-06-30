@@ -9,9 +9,13 @@ def migrate_owners(apps, schema_editor):
 
     for flat in Flat.objects.all().only('id', 'owner', 'owners_phonenumber',
                                         'owner_pure_phone').iterator(chunk_size=1000):
-        owner, created = Owner.objects.get_or_create(full_name=flat.owner,
-                                                     phonenumber=flat.owners_phonenumber,
-                                                     pure_phone=flat.owner_pure_phone)
+        trip_owner = flat.owner.strip()
+        owner, created = Owner.objects.get_or_create(
+            full_name=trip_owner,
+            defaults={'full_name': trip_owner,
+                      'phonenumber': flat.owners_phonenumber,
+                      'pure_phone': flat.owner_pure_phone}
+        )
         owner.flats.add(flat)
 
 
