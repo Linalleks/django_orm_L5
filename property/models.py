@@ -50,6 +50,7 @@ class Flat(models.Model):
     likes = models.ManyToManyField(
         User,
         blank=True,
+        related_name='liked_flats',
         verbose_name='Кто лайкнул'
     )
     created_at = models.DateTimeField(
@@ -66,9 +67,13 @@ class Flat(models.Model):
 
 
 class Complaint(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,
+                             null=True,
+                             related_name='sent_complaints',
                              verbose_name='Кто жаловался')
-    flat = models.ForeignKey(Flat, on_delete=models.SET_NULL, null=True,
+    flat = models.ForeignKey(Flat, on_delete=models.SET_NULL,
+                             null=True,
+                             related_name='complaints',
                              verbose_name='Квартира, на которую пожаловались')
     text = models.TextField('Текст жалобы')
 
